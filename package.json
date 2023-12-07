@@ -8,7 +8,9 @@
     "start": "node server.js",
     "test": "node ace test",
     "lint": "eslint . --ext=.ts",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "db:up": "docker-compose up -d",
+    "db:down": "docker-compose down"
   },
   "eslintConfig": {
     "extends": [
@@ -56,7 +58,11 @@
   },
   "dependencies": {
     "@adonisjs/core": "^5.9.0",
+    "@adonisjs/redis": "^7.3.4",
     "@adonisjs/repl": "^3.1.11",
+    "@octokit/auth-app": "^6.0.1",
+    "@octokit/auth-token": "^4.0.0",
+    "@octokit/rest": "^20.0.2",
     "proxy-addr": "^2.0.7",
     "reflect-metadata": "^0.1.13",
     "source-map-support": "^0.5.21"

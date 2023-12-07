@@ -21,4 +21,10 @@ export default Env.rules({
   APP_NAME: Env.schema.string(),
   DRIVE_DISK: Env.schema.enum(['local'] as const),
   NODE_ENV: Env.schema.enum(['development', 'production', 'test'] as const),
+  GITHUB_PRIVATE_KEY: Env.schema.string(),
+  GITHUB_APP_ID: Env.schema.number(),
+  GITHUB_INSTALLATION_ID: Env.schema.number(),
+  GITHUB_CLIENT_SECRET: Env.schema.string(),
+  GITHUB_ACCESS_TOKEN: Env.schema.string(),
+  GITHUB_USERNAME: Env.schema.string(),
 })
