@@ -7,6 +7,7 @@ import { allRepos, publicRepos } from '../../testConstants'
 test.group('Github Controller', (group) => {
   group.each.setup(async () => {
     await sinon.restore()
+    sinon.stub(Redis, 'expire').resolves('Ok')
   })
 
   test('Get all private repositories - Cache miss', async ({ client, assert }) => {
