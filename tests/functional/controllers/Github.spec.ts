@@ -5,15 +5,13 @@ import Redis from '@ioc:Adonis/Addons/Redis'
 import { allRepos, publicRepos } from '../../testConstants'
 
 test.group('Github Controller', (group) => {
+  sinon.stub(Redis, 'set').resolves('OK')
   group.each.setup(async () => {
-    sinon.stub(Redis, 'set').resolves(null)
-    return async () => {
-      console.log('stopping')
-      sinon.restore()
-    }
+    await sinon.restore()
   })
 
   test('Get all private repositories - Cache miss', async ({ client, assert }) => {
+    sinon.stub(Redis, 'get').resolves(null)
     const octokitStub = sinon.stub().resolves({
       data: {
         items: allRepos,
@@ -54,7 +52,6 @@ test.group('Github Controller', (group) => {
     sinon.stub(Redis, 'get').resolves(null)
 
     const response = await client.get('/')
-    console.log(typeof response.text())
     assert.equal(response.text(), JSON.stringify({ message: 'You have no private repositories' }))
     assert.equal(response.status(), 404)
   })

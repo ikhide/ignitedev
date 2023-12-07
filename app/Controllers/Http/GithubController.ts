@@ -50,8 +50,8 @@ export default class Github {
 
       return ctx.response.status(200).json(repositories)
     } catch (error) {
-      Logger.error('Error in Github.getPrivateRepositories', error)
-      return ctx.response.status(500).json({ error: error.message || 'Internal Server Error' })
+      Logger.info(`Error in Github.getPrivateRepositories: ${error.message}`)
+      return ctx.response.status(500).json({ message: 'Internal server error' })
     }
   }
 
