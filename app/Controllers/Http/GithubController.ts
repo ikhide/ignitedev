@@ -9,12 +9,12 @@ const { igniteApp } = Config.get('github')
 const REDIS_KEY = 'repositories'
 
 export default class Github {
-  public async getPrivateRepositories(ctx: HttpContextContract): Promise<any> {
+  public async getPrivateRepositories(ctx: HttpContextContract): Promise<void> {
     try {
       // FETCH DATA FROM CACHE
-      let repositories = await Redis.get(REDIS_KEY)
-      if (repositories) {
-        return ctx.response.status(200).json(JSON.parse(repositories))
+      const cachedRepositories = await Redis.get(REDIS_KEY)
+      if (cachedRepositories) {
+        return ctx.response.status(200).json(JSON.parse(cachedRepositories))
       }
 
       const octokit = this.getGitHubConfig()
@@ -22,36 +22,36 @@ export default class Github {
       const foundRepos: any[] = []
       let page = 0
 
-      // GET ALL PRIVATE REPOSITORIES
       do {
         const { data } = await octokit.request(`Get /search/repositories`, {
           q: `user:${igniteApp.userName}`,
           page,
-          per_page: 50,
+          per_page: 100,
         })
 
-        // eslint-disable-next-line @typescript-eslint/naming-convention
-        const { items, total_count } = data
+        const { items, total_count: totalCount } = data
 
         foundRepos.push(...items)
 
-        fetching = total_count > foundRepos.length
+        fetching = totalCount > foundRepos.length
         page++
       } while (fetching)
 
-      repositories = foundRepos
-        ?.filter((item) => item.private)
-        .map((repo) => {
-          return { name: repo.name, type: repo.private }
-        })
+      // FIND ALL PRIVATE REPOSITORIES
+      const repositories = foundRepos
+        ? foundRepos.filter((repo) => repo.private).map((repo) => repo.name)
+        : []
 
-      await Redis.set(REDIS_KEY, JSON.stringify(repositories))
+      if (!repositories.length)
+        return ctx.response.status(404).json({ message: 'You have no private repositories' })
+
+      await Redis.set(REDIS_KEY, JSON.stringify(repositories)) // Save result to cache
       await Redis.expire(REDIS_KEY, 300) // Set TTL to 5 minutes (300 seconds)
 
       return ctx.response.status(200).json(repositories)
     } catch (error) {
       Logger.error('Error in Github.getPrivateRepositories', error)
-      return ctx.response.status(500).json({ error: 'Internal Server Error' })
+      return ctx.response.status(500).json({ error: error.message || 'Internal Server Error' })
     }
   }
 
