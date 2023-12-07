@@ -63,6 +63,7 @@
     "@octokit/auth-app": "^6.0.1",
     "@octokit/auth-token": "^4.0.0",
     "@octokit/rest": "^20.0.2",
+    "adonis-autoswagger": "^1.8.1",
     "proxy-addr": "^2.0.7",
     "reflect-metadata": "^0.1.13",
     "source-map-support": "^0.5.21"
