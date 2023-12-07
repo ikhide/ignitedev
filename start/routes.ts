@@ -20,6 +20,4 @@
 
 import Route from '@ioc:Adonis/Core/Route'
 
-Route.get('/', async () => {
-  return { hello: 'worlttd' }
-})
+Route.get('/', 'GithubController.getPrivateRepositories').as('getAll')
