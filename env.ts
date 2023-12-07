@@ -27,4 +27,8 @@ export default Env.rules({
   GITHUB_CLIENT_SECRET: Env.schema.string(),
   GITHUB_ACCESS_TOKEN: Env.schema.string(),
   GITHUB_USERNAME: Env.schema.string(),
+  REDIS_CONNECTION: Env.schema.string(),
+  REDIS_HOST: Env.schema.string(),
+  REDIS_PORT: Env.schema.string(),
+  REDIS_PASSWORD: Env.schema.string.optional(),
 })
