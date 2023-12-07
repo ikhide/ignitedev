@@ -91,13 +91,13 @@ For database operations using Docker:
 - Start the database:
 
 ```bash
-npm run db:up
+npm run infra:up
 ```
 
 - Stop the database:
 
 ```bash
-npm run db:down
+npm run infra:down
 ```
 
 ## Available Scripts
@@ -109,8 +109,8 @@ npm run db:down
 - `npm run test:coverage:` Run tests with coverage using NYC.
 - `npm run lint:` Lint TypeScript files.
 - `npm run format:` Format files using Prettier.
-- `npm run db:up:` Start the Dockerized database.
-- `npm run db:down:` Stop the Dockerized database.
+- `npm run infra:up:` Start the Dockerized database.
+- `npm run infra:down:` Stop the Dockerized database.
 
 ## API Documentation
 
