@@ -9,12 +9,12 @@ const { igniteApp } = Config.get('github')
 const REDIS_KEY = 'repositories'
 
 export default class Github {
-  public async getPrivateRepositories(ctx: HttpContextContract): Promise<void> {
+  public async getPrivateRepositories({ response }: HttpContextContract): Promise<void> {
     try {
       // FETCH DATA FROM CACHE
       const cachedRepositories = await Redis.get(REDIS_KEY)
       if (cachedRepositories) {
-        return ctx.response.status(200).json(JSON.parse(cachedRepositories))
+        return response.status(200).json(JSON.parse(cachedRepositories))
       }
 
       const octokit = this.getGitHubConfig()
@@ -43,15 +43,15 @@ export default class Github {
         : []
 
       if (!repositories.length)
-        return ctx.response.status(404).json({ message: 'You have no private repositories' })
+        return response.status(404).json({ message: 'You have no private repositories' })
 
       await Redis.set(REDIS_KEY, JSON.stringify(repositories)) // Save result to cache
       await Redis.expire(REDIS_KEY, 300) // Set TTL to 5 minutes (300 seconds)
 
-      return ctx.response.status(200).json(repositories)
+      return response.status(200).json(repositories)
     } catch (error) {
       Logger.info(`Error in Github.getPrivateRepositories: ${error.message}`)
-      return ctx.response.status(500).json({ message: 'Internal server error' })
+      return response.status(500).json({ message: 'Internal server error' })
     }
   }
 
